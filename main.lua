@@ -1,23 +1,28 @@
+local player = {}
+
 function love.load()
-  x = 0
-  y = 0
+  player.x = 0
+  player.y = 0
+  player.weight = 30
+  player.height = 30
+  player.speed = 100
 end
 
 function love.update(dt)
   if love.keyboard.isDown("d") then
-    x = x + 100 * dt
+    player.x = player.x + player.speed * dt
   end
   if love.keyboard.isDown("a") then
-    x = x - 100 * dt
+    player.x = player.x - player.speed * dt
   end
   if love.keyboard.isDown("w") then
-    y = y - 100 * dt
+    player.y = player.y - player.speed * dt
   end
   if love.keyboard.isDown("s") then
-    y = y + 100 * dt
+    player.y = player.y + player.speed * dt
   end
 end
 
 function love.draw()
-    love.graphics.rectangle("fill", x, y, 30, 30)
+    love.graphics.rectangle("fill", player.x, player.y, player.weight, player.height)
 end
