@@ -52,11 +52,11 @@ function make_a_projectile()
     if can_make_projectile <= 0 then
         can_make_projectile = 10
         local projectile = {}
-        projectile.x = player.x + player.width / 2 - 5
-        projectile.y = player.y
         projectile.width = projectile_img:getWidth()
         projectile.height = projectile_img:getHeight()
-        projectile.speed = 300
+        projectile.x = player.x + player.width / 2 - projectile.width / 2
+        projectile.y = player.y
+        projectile.speed = 600
         table.insert(projectiles, projectile)
     end
 
