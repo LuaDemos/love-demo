@@ -1,8 +1,5 @@
 # love2d Demo
 
+### lession7
 
-
-### lession6
-
-增加敌人、食物和子弹
-
+碰撞检测
