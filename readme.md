@@ -1,5 +1,5 @@
 # love2d Demo
 
-### lession7
+### lession8
 
-碰撞检测
+音效和图片
