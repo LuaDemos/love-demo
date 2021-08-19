@@ -7,17 +7,19 @@ local foods = {}
 local projectiles = {}
 local time = 0
 local score = 0
-
+_gw = 500 -- game screen width
+_gh = 800 -- game screen height
 local gameover = false
 
 local can_make_projectile = 0
 
+
 function init()
-    player.x = 500 / 2 - 15
-    player.y = 500 - 30
     player.width = player_img:getWidth()
     player.height = player_img:getHeight()
-    player.speed = 100
+    player.x = _gw / 2 - player.width/2
+    player.y = _gh - player.height
+    player.speed = 300
     enemys = {}
     foods = {}
     projectiles = {}
@@ -31,10 +33,11 @@ end
 
 function make_a_enemy()
     local enemy = {}
-    enemy.x = math.random(100, 500)
-    enemy.y = 0
+    enemy.x = math.random(0, _gw)
+    enemy.y = -200
     enemy.width = enemy_img:getWidth()
     enemy.height = enemy_img:getHeight()
+    enemy.speed = 300
     table.insert(enemys, enemy)
 end
 
@@ -56,15 +59,23 @@ function make_a_projectile()
         projectile.height = projectile_img:getHeight()
         projectile.x = player.x + player.width / 2 - projectile.width / 2
         projectile.y = player.y
-        projectile.speed = 600
+        projectile.speed = 800
         table.insert(projectiles, projectile)
+        audio = love.audio.newSource("assets/short.wav", "static")
+        love.audio.play(audio)
     end
 
 end
 
 function love.load()
-    local font = love.graphics.newFont(100, "mono", 10)
+    love.window.setMode( _gw, _gh,{
+        fullscreen=false
+    } )
+    love.window.setTitle('Space War')
+    local font = love.graphics.newFont(50, "mono", 10)
     gameoverText = love.graphics.newText(font, "Game Over")
+    font2 = love.graphics.newFont(30, "mono", 10)
+    restartText = love.graphics.newText(font2, "press R to restart")
     local fontScore = love.graphics.newFont(20, "mono", 10)
     scoreText = love.graphics.newText(fontScore, score)
     player_img = love.graphics.newImage("assets/player.png")
@@ -77,11 +88,11 @@ function love.update(dt)
     if gameover == false then
         time = time + 1
 
-        if time % 100 == 0 then make_a_enemy() end
+        if time % 60 == 0 then make_a_enemy() end
         -- if time % 300 == 0 then make_a_food() end
 
         for i, v in ipairs(enemys) do
-            v.y = v.y + 100 * dt
+            v.y = v.y + v.speed * dt
             if checkCollision(player, v, 20, 30, 10, 10) then
                 gameover = true
             end
@@ -93,6 +104,8 @@ function love.update(dt)
                 if checkCollision(v, vv, 5, 20, 0, 0) then
                     table.remove(projectiles, i)
                     table.remove(enemys, ii)
+                    audio = love.audio.newSource("assets/pixel.wav", "static")
+                    love.audio.play(audio)
                     score = score + 1
                     scoreText:set(score)
                 end
@@ -126,5 +139,8 @@ function love.draw()
 
     love.graphics.draw(scoreText, 20, 20)
 
-    if gameover == true then love.graphics.draw(gameoverText, 100, 100) end
+    if gameover == true then 
+        love.graphics.draw(gameoverText, 120, 200)
+        love.graphics.draw(restartText, 120, 300)  
+    end
 end
