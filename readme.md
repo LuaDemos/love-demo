@@ -1,8 +1,9 @@
 # love2d Demo
 
-### lession8
+> 一个用love2d游戏引擎开发的空战小游戏。
 
-音效和图片
+目前更新到lession8，每个分支为一个lession，具有详细的过程。
 
-图片素材由以下地址下载
-https://gisha.itch.io/spaceships-asset-pack?download
+目前已经可以玩了。
+
+![](screen.gif)
