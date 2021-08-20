@@ -67,7 +67,7 @@ function make_a_projectile()
 end
 
 function love.load()
-    love.window.setMode(_gw, _gh, {fullscreen = false})
+    love.window.setMode(_gw, _gh, {fullscreen = true})
     love.window.setTitle('Space War')
     local font = love.graphics.newFont(50, "mono", 10)
     gameoverText = love.graphics.newText(font, "Game Over")
@@ -85,7 +85,7 @@ function love.update(dt)
     if gameover == false then
         time = time + 1
 
-        if time % 60 == 0 then make_a_enemy() end
+        if time % 80 == 0 then make_a_enemy() end
         -- if time % 300 == 0 then make_a_food() end
 
         for i, v in ipairs(enemys) do
@@ -114,11 +114,8 @@ function love.update(dt)
 
     if gameover == true then
         if restart_event then
-            print(restart_event)
-        else
-            print('nil')
+            restart_event(init)
         end
-        restart_event(init)
     end
 
 end
@@ -137,7 +134,7 @@ function love.draw()
     love.graphics.draw(scoreText, 20, 20)
 
     if gameover == true then
-        love.graphics.draw(gameoverText, 120, 200)
-        love.graphics.draw(restartText, 120, 300)
+        love.graphics.draw(gameoverText, 120, 100)
+        love.graphics.draw(restartText, 120, 160)
     end
 end
