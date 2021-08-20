@@ -36,7 +36,7 @@ function make_a_enemy()
     enemy.y = -200
     enemy.width = enemy_img:getWidth()
     enemy.height = enemy_img:getHeight()
-    enemy.speed = 100
+    enemy.speed = 50
     table.insert(enemys, enemy)
 end
 
@@ -52,15 +52,15 @@ end
 function make_a_projectile()
     can_make_projectile = can_make_projectile - 1
     if can_make_projectile <= 0 then
-        can_make_projectile = 10
+        can_make_projectile = 15
         local projectile = {}
         projectile.width = projectile_img:getWidth()
         projectile.height = projectile_img:getHeight()
         projectile.x = player.x + player.width / 2 - projectile.width / 2
         projectile.y = player.y
-        projectile.speed = 800
+        projectile.speed = 200
         table.insert(projectiles, projectile)
-        audio = love.audio.newSource("assets/short.wav", "static")
+        audio = love.audio.newSource("assets/shoot.wav", "static")
         love.audio.play(audio)
     end
 
@@ -76,7 +76,7 @@ function love.load()
     local fontScore = love.graphics.newFont(20, "mono", 10)
     scoreText = love.graphics.newText(fontScore, score)
     player_img = love.graphics.newImage("assets/player.png", {dpiscale = 1.5})
-    enemy_img = love.graphics.newImage("assets/enemy.png",{dpiscale = 1.5})
+    enemy_img = love.graphics.newImage("assets/enemy.png", {dpiscale = 1.5})
     projectile_img = love.graphics.newImage("assets/projectile.png")
     init()
 end
@@ -90,21 +90,29 @@ function love.update(dt)
 
         for i, v in ipairs(enemys) do
             v.y = v.y + v.speed * dt
-            if checkCollision(player, v, 20, 30, 10, 10) then
-                gameover = true
+            if v.y >= _gh then
+                table.remove(enemys, i)
+            else
+                if checkCollision(player, v, 20, 30, 10, 10) then
+                    gameover = true
+                end
             end
         end
         for i, v in ipairs(foods) do v.y = v.y + 100 * dt end
         for i, v in ipairs(projectiles) do
             v.y = v.y - v.speed * dt
-            for ii, vv in ipairs(enemys) do
-                if checkCollision(v, vv, 5, 20, 0, 0) then
-                    table.remove(projectiles, i)
-                    table.remove(enemys, ii)
-                    audio = love.audio.newSource("assets/pixel.wav", "static")
-                    love.audio.play(audio)
-                    score = score + 1
-                    scoreText:set(score)
+            if v.y <= -1 * v.height then
+                table.remove(projectiles, i)
+            else
+                for ii, vv in ipairs(enemys) do
+                    if checkCollision(v, vv, 5, 20, 0, 0) then
+                        table.remove(projectiles, i)
+                        table.remove(enemys, ii)
+                        audio = love.audio.newSource("assets/pixel.wav", "static")
+                        love.audio.play(audio)
+                        score = score + 1
+                        scoreText:set(score)
+                    end
                 end
             end
         end
@@ -112,11 +120,7 @@ function love.update(dt)
         key_event(player, dt, make_a_projectile)
     end
 
-    if gameover == true then
-        if restart_event then
-            restart_event(init)
-        end
-    end
+    if gameover == true then if restart_event then restart_event(init) end end
 
 end
 
@@ -134,7 +138,10 @@ function love.draw()
     love.graphics.draw(scoreText, 20, 20)
 
     if gameover == true then
-        love.graphics.draw(gameoverText, 120, 100)
-        love.graphics.draw(restartText, 120, 160)
+        love.graphics.draw(gameoverText, _gw / 2 - gameoverText:getWidth() / 2,
+                           _gh / 2 - gameoverText:getHeight())
+        love.graphics.draw(restartText, _gw / 2 - restartText:getWidth() / 2,
+                           _gh / 2 - gameoverText:getHeight() / 2 +
+                               restartText:getHeight())
     end
 end
