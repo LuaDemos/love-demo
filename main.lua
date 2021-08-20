@@ -7,17 +7,16 @@ local foods = {}
 local projectiles = {}
 local time = 0
 local score = 0
-_gw = 500 -- game screen width
-_gh = 800 -- game screen height
+_gw = 480 -- game screen width
+_gh = 320 -- game screen height
 local gameover = false
 
 local can_make_projectile = 0
 
-
 function init()
     player.width = player_img:getWidth()
     player.height = player_img:getHeight()
-    player.x = _gw / 2 - player.width/2
+    player.x = _gw / 2 - player.width / 2
     player.y = _gh - player.height
     player.speed = 300
     enemys = {}
@@ -37,7 +36,7 @@ function make_a_enemy()
     enemy.y = -200
     enemy.width = enemy_img:getWidth()
     enemy.height = enemy_img:getHeight()
-    enemy.speed = 300
+    enemy.speed = 100
     table.insert(enemys, enemy)
 end
 
@@ -68,9 +67,7 @@ function make_a_projectile()
 end
 
 function love.load()
-    love.window.setMode( _gw, _gh,{
-        fullscreen=false
-    } )
+    love.window.setMode(_gw, _gh, {fullscreen = false})
     love.window.setTitle('Space War')
     local font = love.graphics.newFont(50, "mono", 10)
     gameoverText = love.graphics.newText(font, "Game Over")
@@ -78,8 +75,8 @@ function love.load()
     restartText = love.graphics.newText(font2, "press R to restart")
     local fontScore = love.graphics.newFont(20, "mono", 10)
     scoreText = love.graphics.newText(fontScore, score)
-    player_img = love.graphics.newImage("assets/player.png")
-    enemy_img = love.graphics.newImage("assets/enemy.png")
+    player_img = love.graphics.newImage("assets/player.png", {dpiscale = 1.5})
+    enemy_img = love.graphics.newImage("assets/enemy.png",{dpiscale = 1.5})
     projectile_img = love.graphics.newImage("assets/projectile.png")
     init()
 end
@@ -139,8 +136,8 @@ function love.draw()
 
     love.graphics.draw(scoreText, 20, 20)
 
-    if gameover == true then 
+    if gameover == true then
         love.graphics.draw(gameoverText, 120, 200)
-        love.graphics.draw(restartText, 120, 300)  
+        love.graphics.draw(restartText, 120, 300)
     end
 end
